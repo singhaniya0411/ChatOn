@@ -1,2 +1,2 @@
-React + vite  chat application (ChatOn)
+React + vite  chat application
 
