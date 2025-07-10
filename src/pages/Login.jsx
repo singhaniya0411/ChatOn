@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import assets from "../assets/assets";
 import { signup, login, resetPass } from "../config/firebase";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [currState, setCurrState] = useState("Sign Up");
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
@@ -89,7 +91,7 @@ const Login = () => {
             <p className="text-xs text-color-gray">
               Forgot password ?
               <span
-                onClick={() => resetPass(email)}
+                onClick={() => navigate("/forgetpassword")}
                 className="font-semibold cursor-pointer text-blue-500 p-2"
               >
                 Reset here .

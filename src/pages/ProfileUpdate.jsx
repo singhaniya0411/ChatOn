@@ -9,7 +9,7 @@ import upload from "../lib/upload";
 import { AppContext } from "../context/AppContext";
 
 const ProfileUpdate = () => {
-  const [image, setImagae] = useState(false);
+  const [image, setImage] = useState(null); // Fixed typo here
   const [name, setName] = useState("");
   const [bio, setBio] = useState("");
   const [uid, setUid] = useState("");
@@ -22,6 +22,7 @@ const ProfileUpdate = () => {
     try {
       if (!prevImage && !image) {
         toast.error("Upload Profile Picture");
+        return; // Ensure no further action if no image is provided
       }
       const docRef = doc(db, "users", uid);
 
@@ -58,20 +59,24 @@ const ProfileUpdate = () => {
         const docRef = doc(db, "users", user.uid);
         const docSnap = await getDoc(docRef);
 
-        if (docSnap.data().name) {
-          setName(docSnap.data().name);
-        }
-        if (docSnap.data().bio) {
-          setBio(docSnap.data().bio);
-        }
-        if (docSnap.data().avatar) {
-          setPrevImage(docSnap.data().avatar);
+        if (docSnap.exists()) {
+          // Added check for existence
+          if (docSnap.data().name) {
+            setName(docSnap.data().name);
+          }
+          if (docSnap.data().bio) {
+            setBio(docSnap.data().bio);
+          }
+          if (docSnap.data().avatar) {
+            setPrevImage(docSnap.data().avatar);
+          }
         }
       } else {
         navigate("/");
       }
     });
-  }, []);
+  }, [navigate]); // Added navigate as a dependency to make sure it works correctly
+
   return (
     <div
       className="min-h-screen bg-no-repeat bg-cover flex justify-center items-center "
@@ -85,7 +90,7 @@ const ProfileUpdate = () => {
             htmlFor="avatar"
           >
             <input
-              onChange={(e) => setImagae(e.target.files[0])}
+              onChange={(e) => setImage(e.target.files[0])}
               type="file"
               id="avatar"
               accept=".png,.jpg,.jpeg"

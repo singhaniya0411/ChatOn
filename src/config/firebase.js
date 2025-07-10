@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth, sendPasswordResetEmail, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { getFirestore, setDoc, doc, collection, query, where, getDocs } from "firebase/firestore";
 import { toast } from "react-toastify";
+import { auth, db } from "./firebaseConfig";
 
 
 const firebaseConfig = {
@@ -18,15 +19,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 
-const auth = getAuth(app)
+// const auth = getAuth(app)
 
-const db = getFirestore(app)
+// const db = getFirestore(app)
 
 const signup = async (username, email, password) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password);
 
     const user = res.user;
+    console.log(res.user)
+
     await setDoc(doc(db, "users", user.uid), {
       id: user.uid,
       username: username.toLowerCase(),
@@ -43,7 +46,7 @@ const signup = async (username, email, password) => {
 
     toast.success("Account created successfully!")
   } catch (error) {
-    console.error(error);
+    console.error(error.message);
     toast.error(error.code.split('/')[1].split('-').join(''))
 
   }
@@ -72,25 +75,24 @@ const logout = async () => {
 
 const resetPass = async (email) => {
   if (!email) {
-    toast.error("Enter your email")
-    return null;
+    toast.error("Enter your email");
+    return;
   }
-  try {
-    const userRef = collection(db, 'users');
-    const q = query(userRef, where("email", "==", email))
-    const querySnapshot = await getDocs(q);
 
-    if (!querySnapshot.empty) {
-      await sendPasswordResetEmail(auth, email)
-      toast.success("Reset email sent")
-    }
-    else {
-      toast.error("Enter a registered email")
-    }
+  try {
+    await sendPasswordResetEmail(auth, email);
+    toast.success("Reset email sent. Check your inbox!");
   } catch (error) {
-    toast.error(error.message);
-    console.log(error)
+    // Handle specific errors
+    if (error.code === "auth/user-not-found") {
+      toast.error("No account found with this email.");
+    } else if (error.code === "auth/invalid-email") {
+      toast.error("Invalid email format.");
+    } else {
+      toast.error("Failed to send reset email. Try again later.");
+    }
+    console.error(error);
   }
-}
+};
 
 export { signup, login, logout, resetPass, auth, db }

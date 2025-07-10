@@ -8,63 +8,82 @@ const RightSideBar = () => {
   const [msgImages, setMsgImages] = useState([]);
 
   useEffect(() => {
-    let temp = [];
-    messages.map((msg) => {
-      if (msg.image) {
-        temp.push(msg.image);
-      }
-    });
-    // console.log(temp);
-    setMsgImages(temp);
+    const images = messages.filter((msg) => msg.image).map((msg) => msg.image);
+    setMsgImages(images);
   }, [messages]);
 
   return chatUser ? (
-    <div className="text-white bg-[#001030] relative h-[75vh] overflow-y-scroll">
-      <div className="pt-14 text-center items-center flex flex-col ">
-        <img
-          className="w-[110px] aspect-square rounded-full"
-          src={chatUser.userData.avatar}
-          alt=""
-        />
-        <h3 className="text-[15px] flex font-normal items-center justify-center gap-1 mx-1 my-0">
-          {chatUser.userData.name}
-        </h3>
-        <h4 className="text-[8px]">
-          {Date.now() - chatUser.userData.lastSeen <= 60001 ? "Online" : ""}
-        </h4>
-        <p className=" max-w-[70%] text-xs opacity-80 font-light">
-          {chatUser.userData.bio}
-        </p>
-      </div>
-      <hr className="border-[#ffffff50] mx-4 my-0" />
-      <div className="px-1 py-5 text-xs ">
-        <p>Media</p>
-        <div className="max-h-[180px] overflow-y-scroll grid grid-cols-[1fr_1fr_1fr] gap-1 mt-2">
-          {msgImages.map((url, index) => (
-            <img
-              className="rounded"
-              onClick={() => window.open(url)}
-              key={index}
-              src={url}
-            />
-          ))}
+    <div className="bg-gradient-to-b from-blue-600 to-blue-400 text-white h-[75vh] rounded-tr-lg rounded-br-lg shadow-xl overflow-hidden flex flex-col">
+      {/* Profile Section */}
+      <div className="pt-8 pb-4 px-4 text-center flex flex-col items-center border-b border-blue-500">
+        <div className="relative mb-3">
+          <img
+            className="w-24 h-24 rounded-full border-4 border-blue-300 shadow-md"
+            src={chatUser.userData.avatar}
+            alt={chatUser.userData.name}
+          />
+          {Date.now() - chatUser.userData.lastSeen <= 60001 && (
+            <div className="absolute bottom-2 right-2 w-4 h-4 bg-green-400 rounded-full border-2 border-blue-600"></div>
+          )}
         </div>
+
+        <h3 className="text-lg font-semibold flex items-center gap-1">
+          {chatUser.userData.name}
+          {Date.now() - chatUser.userData.lastSeen <= 60001 && (
+            <span className="text-xs text-blue-200">• Online</span>
+          )}
+        </h3>
+
+        {chatUser.userData.bio && (
+          <p className="mt-2 text-sm text-blue-100 max-w-[80%]">
+            {chatUser.userData.bio}
+          </p>
+        )}
       </div>
-      <div className="flex items-center justify-center text-[12px]">
+
+      {/* Media Section */}
+      <div className="px-4 py-3 flex-1 overflow-y-auto">
+        <h4 className="text-sm font-medium text-center mb-3">Shared Media</h4>
+        {msgImages.length > 0 ? (
+          <div className="grid grid-cols-3 gap-2">
+            {msgImages.map((url, index) => (
+              <div
+                key={index}
+                className="aspect-square rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => window.open(url)}
+              >
+                <img
+                  className="w-full h-full object-cover"
+                  src={url}
+                  alt={`Shared media ${index + 1}`}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-sm text-blue-200 py-4">
+            No media shared yet
+          </p>
+        )}
+      </div>
+
+      {/* Logout Button */}
+      <div className="p-4 border-t border-blue-500">
         <button
-          onClick={() => logout()}
-          className=" bottom-10 bg-blue-500 py-3 px-10 rounded-full"
+          onClick={logout}
+          className="w-full bg-blue-700 hover:bg-blue-800 text-white py-2 px-4 rounded-full transition-colors shadow-md"
         >
           Logout
         </button>
       </div>
     </div>
   ) : (
-    <div className="text-white bg-[#001030] relative h-[75vh] overflow-y-scroll ">
-      <div className="flex items-center justify-center text-[12px]">
+    <div className="bg-gradient-to-b from-blue-600 to-blue-400 text-white h-[75vh] rounded-tr-lg rounded-br-lg shadow-xl flex flex-col justify-center items-center">
+      <div className="text-center p-6">
+        <p className="text-blue-200 mb-4">Select a chat to view details</p>
         <button
-          className="absolute bottom-5 bg-blue-500 py-3 px-10 rounded-full"
-          onClick={() => logout()}
+          onClick={logout}
+          className="bg-blue-700 hover:bg-blue-800 text-white py-2 px-6 rounded-full transition-colors shadow-md"
         >
           Logout
         </button>

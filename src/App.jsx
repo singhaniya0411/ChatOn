@@ -9,6 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./config/firebase";
 import { AppContext } from "./context/AppContext";
+import ForgetPass from "./pages/ForgetPass";
 
 const App = () => {
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ const App = () => {
     onAuthStateChanged(auth, async (user) => {
       if (user) {
         navigate("/chat");
+
         await loadUserData(user.uid);
       } else {
         navigate("/");
@@ -25,14 +27,15 @@ const App = () => {
     });
   }, []);
   return (
-    <>
+    <div>
       <ToastContainer />
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/chat" element={<Chat />} />
         <Route path="/profile" element={<ProfileUpdate />} />
+        <Route path="/forgetpassword" element={<ForgetPass />} />
       </Routes>
-    </>
+    </div>
   );
 };
 
