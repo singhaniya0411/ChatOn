@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "../config/firebase";
+import { auth, db } from "../config/firebase";
 import assets from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import {
@@ -166,8 +166,12 @@ const LeftSideBar = () => {
       <div className="p-4 border-b border-blue-500">
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <img className="h-8" src={assets.top_logo} alt="Logo" />
-            <h1 className="text-xl font-bold text-white">Messages</h1>
+            <img
+              className="md:h-10 h-12 md:w-16 mix-blend-multiply"
+              src={assets.top_logo}
+              alt="Logo"
+            />
+            <h1 className="text-[16px] hidden md:block text-white">Messages</h1>
           </div>
 
           <div className="relative group">

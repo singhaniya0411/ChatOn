@@ -40,7 +40,7 @@ const Chat = () => {
           </p>
         </div>
       ) : (
-        <div className="w-full max-w-6xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col md:grid md:grid-cols-[0.9fr_2fr_1fr] relative">
+        <div className="w-full max-w-6xl bg-white rounded-xl shadow-2xl overflow-hidden flex h-[75vh] flex-col md:grid md:grid-cols-[0.9fr_2fr_1fr] relative">
           {/* Mobile Header */}
           {isMobile && (
             <div className="flex justify-between items-center p-3 bg-blue-600 text-white md:hidden">

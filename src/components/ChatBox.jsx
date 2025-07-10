@@ -9,7 +9,6 @@ import {
   onSnapshot,
   updateDoc,
 } from "firebase/firestore";
-
 import { db } from "../config/firebase";
 import { toast } from "react-toastify";
 
@@ -108,7 +107,6 @@ const ChatBox = () => {
       return hours + ":" + minute + "AM";
     }
   };
-
   useEffect(() => {
     if (messageId) {
       const unSub = onSnapshot(doc(db, "messages", messageId), (res) => {
@@ -120,34 +118,31 @@ const ChatBox = () => {
       };
     }
   }, [messageId]);
-
   return chatUser ? (
-    <div className="h-[75vh] relative bg-gradient-to-b from-blue-50 to-blue-100">
+    <div className="h-[65vh] md:h-[75vh] relative bg-chatbox-bg">
       {/* Header */}
-      <div className="px-4 py-3 flex items-center gap-3 border-b border-blue-200 bg-gradient-to-r from-blue-500 to-blue-600 shadow-sm">
+      <div className="px-3 py-4 flex items-center gap-3 border-b-[1px] border-custom-gray">
         <img
-          className="w-10 aspect-square rounded-full border-2 border-white"
+          className="w-9 aspect-square rounded-full"
           src={chatUser.userData.avatar}
           alt=""
         />
-        <p className="flex-1 font-semibold text-lg flex gap-2 items-center text-white">
+        <p className="flex-1 font-semibold text-xl flex gap-1 items-center text-[#393939]">
           {chatUser.userData.name}
 
           {Date.now() - chatUser.userData.lastSeen <= 60001 ? (
-            <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+            <img className="w-4" src={assets.green_dot} />
           ) : (
             ""
           )}
         </p>
-        <button className="p-1 rounded-full hover:bg-blue-700 transition-colors">
-          <img className="w-5" src={assets.help_icon} alt="Help" />
-        </button>
+        <img className="w-6 rounded-full" src={assets.help_icon} alt="" />
       </div>
 
       {/* msgs section */}
       <div
         style={{ height: "calc(100% - 70px)" }}
-        className="pb-12 overflow-y-scroll flex flex-col-reverse bg-gradient-to-b from-blue-50 to-blue-100"
+        className="pb-12 overflow-y-scroll flex flex-col-reverse"
       >
         {messages.map((msg, index) => {
           return (
@@ -155,34 +150,20 @@ const ChatBox = () => {
               key={index}
               className={
                 msg.sId === userData.id
-                  ? "flex items-end justify-end gap-2 px-4 py-2"
-                  : "flex items-end gap-2 px-4 py-2"
+                  ? "flex items-end justify-end gap-1 px-0 py-4"
+                  : "flex items-end  gap-1 px-0 py-4 flex-row-reverse justify-end"
               }
             >
               {msg["image"] ? (
-                <div
-                  className={
-                    msg.sId === userData.id
-                      ? "bg-blue-500 p-1 rounded-lg shadow-md"
-                      : "bg-blue-100 p-1 rounded-lg shadow-md"
-                  }
-                >
-                  <img className="w-48 rounded-lg" src={msg.image} />
-                </div>
+                <img className="w-32 rounded-lg" src={msg.image} />
               ) : (
-                <div
-                  className={
-                    msg.sId === userData.id
-                      ? "bg-gradient-to-r from-blue-500 to-blue-600 text-white p-3 max-w-xs rounded-2xl rounded-br-none shadow-md"
-                      : "bg-white text-blue-900 p-3 max-w-xs rounded-2xl rounded-bl-none shadow-md"
-                  }
-                >
-                  <p className="text-sm">{msg.text}</p>
-                </div>
+                <p className="text-white bg-blue-500 p-2 max-w-48 text-xs mb-8 rounded-t-lg rounded-b-lg rounded-l-none rounded-r-lg ">
+                  {msg.text}
+                </p>
               )}
-              <div className="flex flex-col items-center space-y-1">
+              <div className="flex flex-col items-center">
                 <img
-                  className="w-8 aspect-square rounded-full border-2 border-white shadow"
+                  className="w-6 aspect-square rounded-full"
                   src={
                     msg.sId === userData.id
                       ? userData.avatar
@@ -190,9 +171,7 @@ const ChatBox = () => {
                   }
                   alt=""
                 />
-                <p className="text-xs text-blue-600 font-medium">
-                  {convertTimeStamp(msg.createdAt)}
-                </p>
+                <p className="text-[8px]">{convertTimeStamp(msg.createdAt)}</p>
               </div>
             </div>
           );
@@ -200,41 +179,45 @@ const ChatBox = () => {
       </div>
 
       {/* Footer */}
-      <div className="flex items-center gap-3 px-4 py-3 bg-white absolute bottom-0 left-0 right-0 border-t border-blue-200 shadow-inner">
+      <div className="flex items-center gap-3 px-2 py-3 bg-white absolute bottom-0 left-0 right-0">
         <input
           onChange={(e) => setInput(e.target.value)}
           value={input}
-          className="flex-1 border border-blue-200 rounded-full px-4 py-2 outline-none focus:ring-2 focus:ring-blue-300 focus:border-transparent"
+          className="flex-1 border-none outline-none"
           type="text"
-          placeholder="Type a message..."
+          placeholder="Send a message"
         />
         <input
           onChange={sendImage}
-          className="hidden"
+          className="flex-1 border-none outline-none"
           type="file"
           id="image"
           accept="image/png,image/jpeg"
+          hidden
         />
-        <label className="flex p-2 rounded-full hover:bg-blue-100 transition-colors cursor-pointer">
-          <img className="w-6" src={assets.gallery_icon} alt="Attach image" />
+        <label className="flex" htmlFor="image">
+          <img
+            className="w-6 cursor-pointer"
+            src={assets.gallery_icon}
+            alt=""
+          />
         </label>
-        <button
+        <img
           onClick={sendMessage}
-          className="p-2 bg-gradient-to-r from-blue-500 to-blue-600 rounded-full hover:from-blue-600 hover:to-blue-700 transition-colors shadow-md"
-        >
-          <img className="w-6" src={assets.send_button} alt="Send message" />
-        </button>
+          className="w-8 cursor-pointer"
+          src={assets.send_button}
+          alt=""
+        />
       </div>
     </div>
   ) : (
-    <div className="w-full h-full bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col items-center justify-center gap-3">
-      <div className="p-4 bg-white rounded-full shadow-lg">
-        <img className="w-16" src={assets.logo_icon} alt="Logo" />
+    <div className=" border border-black">
+      <div className="w-full bg-gradient-to-r from-sky-200 to-white flex flex-col items-center justify-center gap-1 text-[#adadad] h-[75vh]">
+        <img className="w-14" src={assets.logo_icon} alt="" />
+        <p className="text-xl bg-gradient-to-r from-blue-500 via-purple-500 to-purple-600 bg-clip-text text-transparent">
+          Chat anytime ,anywhere
+        </p>
       </div>
-      <p className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
-        Chat anytime, anywhere
-      </p>
-      <p className="text-blue-500 text-sm">Select a chat to start messaging</p>
     </div>
   );
 };
