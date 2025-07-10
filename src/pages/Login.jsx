@@ -18,6 +18,7 @@ const Login = () => {
       login(email, password);
     }
   };
+  
   return (
     <div
       className="min-h-screen flex flex-col md:flex-row items-center justify-center md:justify-evenly gap-10 md:gap-0"

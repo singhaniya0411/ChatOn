@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react";
 import { Route, Router, Routes, useNavigate } from "react-router-dom";
-
 import Chat from "./pages/Chat";
 import ProfileUpdate from "./pages/ProfileUpdate";
 import Login from "./pages/Login";
