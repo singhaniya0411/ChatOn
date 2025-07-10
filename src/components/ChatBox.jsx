@@ -211,7 +211,7 @@ const ChatBox = () => {
       </div>
     </div>
   ) : (
-    <div className=" border border-black">
+    <div className=" border">
       <div className="w-full bg-gradient-to-r from-sky-200 to-white flex flex-col items-center justify-center gap-1 text-[#adadad] h-[75vh]">
         <img className="w-14" src={assets.logo_icon} alt="" />
         <p className="text-xl bg-gradient-to-r from-blue-500 via-purple-500 to-purple-600 bg-clip-text text-transparent">
